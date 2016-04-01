@@ -38,7 +38,7 @@ class Sudoku{
 		int ans_map[sudokuSize];
 		int COL[25000],ROW[25000];
 		int U[25000],D[25000],L[25000],R[25000];
-		int COLNUM[750],ANS[750];
+		int COLNUM[350],ANS[sudokuSize+1];
 		struct ii{
 			int row;
 			int col;

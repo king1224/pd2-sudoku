@@ -4,9 +4,6 @@
 int main(){
 	Sudoku ss;
 	ss.readIn();
-	int a=1;
-	scanf("%d",&a);
-	ss.rotate(a);
-	ss.outMap();
+	ss.transform();
 	return 0;
 }

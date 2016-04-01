@@ -7,5 +7,5 @@ Sudoku.o: Sudoku.cpp Sudoku.h
 	g++ -c Sudoku.cpp -o Sudoku.o
 
 clean:
-	rm su *.o
+	rm transform solve giveQuestion *.o
 	touch Sudoku.h

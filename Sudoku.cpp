@@ -398,17 +398,24 @@ void Sudoku::solve(){
 	isonly=true;
 
 
-	memset(COLNUM,0,sizeof(COLNUM));
-	memset(COL,0,sizeof(COL));
-	memset(ROW,0,sizeof(ROW));
-	memset(ANS,-1,sizeof(ANS));
+//	memset(COLNUM,0,sizeof(COLNUM));
+//	memset(ANS,-1,sizeof(ANS));
 	R[0]=1; L[0]=324; D[0]=U[0]=0;
-	for(int i=1;i<324;++i){
+	COLNUM[0]=0;	ANS[0]=-1;
+	for(int i=1;i<82;++i){
 		U[i]=D[i]=COL[i]=i;
 		L[i]=i-1;
 		R[i]=i+1;
+		COLNUM[i]=0;
+		ANS[i]=-1;
 	}
-	R[324]=0; U[324]=D[324]=324; L[324]=323;
+	for(int i=82;i<324;++i){
+		U[i]=D[i]=COL[i]=i;
+		L[i]=i-1;
+		R[i]=i+1;
+		COLNUM[i]=0;
+	}
+	COLNUM[324]=R[324]=0; U[324]=D[324]=324; L[324]=323;
 
 
 	for(int i=0;i<sudokuSize;++i){
@@ -624,11 +631,7 @@ void Sudoku::Uncover(int col){
 
 
 void Sudoku::transform(){
-	readIn();
-	rotate(2);
-	rotate(2);
-	for(int i=0;i<sudokuSize;++i)
-		printf("%d%c",map[i],(i+1)%9==0?'\n':' ');
+	outMap();
 }
 
 
