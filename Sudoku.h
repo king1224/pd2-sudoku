@@ -31,8 +31,6 @@ class Sudoku{
 		bool isUnity();
 		bool isOnly();
 		bool Dlx(int deep);
-		void Cover(int col);
-		void Uncover(int col);
 		int map[sudokuSize];
 		int question_map[sudokuSize];
 		int ans_map[sudokuSize];

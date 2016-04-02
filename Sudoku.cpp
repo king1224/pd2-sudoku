@@ -392,14 +392,12 @@ void Sudoku::flip(int a){
 
 void Sudoku::solve(){
 
-	int Nodenum=324,Rownum=0;
+	int Nodenum=325,Rownum=0;
 	int countnum=0;
 	bool iscorrect=false;
 	isonly=true;
 
 
-//	memset(COLNUM,0,sizeof(COLNUM));
-//	memset(ANS,-1,sizeof(ANS));
 	R[0]=1; L[0]=324; D[0]=U[0]=0;
 	COLNUM[0]=0;	ANS[0]=-1;
 	for(int i=1;i<82;++i){
@@ -426,7 +424,7 @@ void Sudoku::solve(){
 				solve_map[Rownum].row=i/9;
 				solve_map[Rownum].col=i%9;
 				solve_map[Rownum].num=j+1;
-				++Nodenum;
+
 				COL[Nodenum]=i+1;
 				ROW[Nodenum]=Rownum;
 				++COLNUM[i+1];
@@ -467,7 +465,7 @@ void Sudoku::solve(){
 
 
 
-				Nodenum+=3;
+				Nodenum+=4;
 			}
 		}
 		else{
@@ -476,7 +474,6 @@ void Sudoku::solve(){
 				solve_map[Rownum].col=i%9;
 				solve_map[Rownum].num=map[i];
 				
-				++Nodenum;
 				COL[Nodenum]=i+1;
 				ROW[Nodenum]=Rownum;
 				++COLNUM[i+1];
@@ -516,7 +513,7 @@ void Sudoku::solve(){
 				++COLNUM[COL[Nodenum+3]];
 			
 
-				Nodenum+=3;
+				Nodenum+=4;
 
 				++countnum;
 		}
@@ -524,12 +521,7 @@ void Sudoku::solve(){
 
 
 	if(countnum<17){
-		if(isUnity()){
-			printf("2\n");
-		}
-		else{
-			printf("0\n");
-		}
+		printf("%d\n",isUnity()?2:0);
 		return;
 	}
 	else{
@@ -580,29 +572,7 @@ bool Sudoku::Dlx(int deep){
 			col=h;
 		}
 	}
-	Cover(col);
-	for(int i=D[col];i!=col;i=D[i]){
-
-		ANS[deep]=ROW[i];
-
-		for(int j=R[i];j!=i;j=R[j]){
-			Cover(COL[j]);
-		}
-		if(Dlx(deep+1)){
-			return true;
-		}
-		for(int j=L[i];j!=i;j=L[j]){
-			Uncover(COL[j]);
-		}
-	}
-	Uncover(col);
-
-	return false;
-}
-
-
-
-void Sudoku::Cover(int col){
+	
 	for(int i=D[col];i!=col;i=D[i]){
 		for(int j=R[i];j!=i;j=R[j]){
 			U[D[j]]=U[j];
@@ -612,11 +582,37 @@ void Sudoku::Cover(int col){
 	}
 	R[L[col]]=R[col];
 	L[R[col]]=L[col];
-}
 
+	for(int i=D[col];i!=col;i=D[i]){
 
+		ANS[deep]=ROW[i];
 
-void Sudoku::Uncover(int col){
+		for(int j=R[i];j!=i;j=R[j]){
+			for(int k=D[COL[j]];k!=COL[j];k=D[k]){
+				for(int r=R[k];r!=k;r=R[r]){
+					U[D[r]]=U[r];
+					D[U[r]]=D[r];
+					--COLNUM[COL[r]];
+				}
+			}
+			R[L[COL[j]]]=R[COL[j]];
+			L[R[COL[j]]]=L[COL[j]];
+		}
+		if(Dlx(deep+1)){
+			return true;
+		}
+		for(int j=L[i];j!=i;j=L[j]){
+			for(int k=U[COL[j]];k!=COL[j];k=U[k]){
+				for(int r=L[k];r!=k;r=L[r]){
+					U[D[r]]=r;
+					D[U[r]]=r;
+					++COLNUM[COL[r]];
+				}
+			}
+			R[L[COL[j]]]=COL[j];
+			L[R[COL[j]]]=COL[j];
+		}
+	}
 	for(int i=U[col];i!=col;i=U[i]){
 		for(int j=L[i];j!=i;j=L[j]){
 			U[D[j]]=j;
@@ -626,6 +622,8 @@ void Sudoku::Uncover(int col){
 	}
 	R[L[col]]=col;
 	L[R[col]]=col;
+
+	return false;
 }
 
 
